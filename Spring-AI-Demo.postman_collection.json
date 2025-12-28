@@ -1,0 +1,255 @@
+{
+	"info": {
+		"_postman_id": "spring-ai-demo-collection",
+		"name": "Spring AI Demo",
+		"description": "Complete API collection for Spring AI demonstration including Chat, Image Generation, Horoscope, and RAG (Retrieval-Augmented Generation) endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Chat & Image",
+			"item": [
+				{
+					"name": "Basic Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"prompt\": \"What is Spring AI and how does it work?\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/chat",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"chat"
+							]
+						},
+						"description": "Send a basic chat prompt to the AI model. Uses default GPT-4 model and temperature settings from application.properties."
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/image/gen?message=A serene landscape with mountains at sunset",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"image",
+								"gen"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "A serene landscape with mountains at sunset"
+								}
+							]
+						},
+						"description": "Generate an image using DALL-E 3 based on a text description. Returns the URL of the generated 1024x1024 image."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Horoscope",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"zodiacSign\": \"Leo\",\n  \"days\": 7\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/horoscope",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"horoscope"
+							]
+						},
+						"description": "Generate a personalized horoscope prediction. Demonstrates prompt templates with variable substitution. Valid zodiac signs: Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces."
+					},
+					"response": []
+				}
+			],
+			"description": "Basic chat, image generation, and horoscope endpoints demonstrating Spring AI fundamentals"
+		},
+		{
+			"name": "RAG (Retrieval-Augmented Generation)",
+			"item": [
+				{
+					"name": "1. Check RAG Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/rag/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"rag",
+								"status"
+							]
+						},
+						"description": "Check the current status of the RAG document store. Returns the total number of chunks and whether the system is ready."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Ingest PDF Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"filePath\": \"/Users/mathew/github_projects/spring-ai/2025_state_of_ai_assisted_software_development.pdf\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/rag/ingest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"rag",
+								"ingest"
+							]
+						},
+						"description": "Ingest a PDF document into the RAG system. The document will be:\n1. Extracted (PDF to text)\n2. Split into chunks (1000 chars with 200 char overlap)\n3. Embedded using OpenAI text-embedding-3-small\n4. Stored in the in-memory vector database\n\nNote: Limited to 50 chunks for demo purposes. Update the filePath to point to your PDF."
+					},
+					"response": []
+				},
+				{
+					"name": "3. RAG Chat - Ask Questions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"What are the key findings about AI-assisted software development in 2025?\",\n  \"topK\": 3\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/rag/chat",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"rag",
+								"chat"
+							]
+						},
+						"description": "Ask questions about ingested documents using RAG. The system will:\n1. Convert your question to an embedding\n2. Find the most similar document chunks (topK)\n3. Include those chunks as context in the prompt\n4. Generate an answer grounded in the retrieved content\n\ntopK: Number of most relevant chunks to retrieve (default: 3)"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Search Document Chunks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/rag/search?query=productivity&topK=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"rag",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "productivity"
+								},
+								{
+									"key": "topK",
+									"value": "3"
+								}
+							]
+						},
+						"description": "Search for document chunks most similar to a query. Returns the matching chunks with metadata (source, chunk_index, preview). Useful for debugging or showing users what context would be retrieved."
+					},
+					"response": []
+				},
+				{
+					"name": "5. Clear Documents",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/rag/clear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"rag",
+								"clear"
+							]
+						},
+						"description": "Clear all documents from the RAG vector store. Use this to reset the system before ingesting new documents."
+					},
+					"response": []
+				}
+			],
+			"description": "RAG endpoints demonstrating document ingestion, embedding, semantic search, and context-grounded question answering"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
