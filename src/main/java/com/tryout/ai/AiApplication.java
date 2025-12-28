@@ -23,6 +23,9 @@ public class AiApplication {
 
     @Bean
     ImageModel imageModel(@Value("${spring.ai.openai.api-key}") String apiKey) {
-        return new OpenAiImageModel(new OpenAiImageApi(apiKey));
+        var openAiImageApi = OpenAiImageApi.builder()
+                .apiKey(apiKey)
+                .build();
+        return new OpenAiImageModel(openAiImageApi);
     }
 }

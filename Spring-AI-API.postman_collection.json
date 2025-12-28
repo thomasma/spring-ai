@@ -1,0 +1,506 @@
+{
+	"info": {
+		"_postman_id": "spring-ai-collection-001",
+		"name": "Spring AI API Collection",
+		"description": "API collection for Spring AI application with OpenAI integration (Chat, Image Generation, and Horoscope endpoints)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "spring-ai-v1.1.0"
+	},
+	"item": [
+		{
+			"name": "Chat API",
+			"item": [
+				{
+					"name": "Send Chat Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"What is Spring Framework?\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"chat"
+							]
+						},
+						"description": "Send a chat message to GPT-4o model with temperature 0.7. Returns a ChatResponse with the AI-generated message."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"prompt\": \"What is Spring Framework?\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/chat",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"chat"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Spring Framework is a comprehensive framework for enterprise Java development...\"\n}"
+						},
+						{
+							"name": "Bad Request - Empty Prompt",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"prompt\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/chat",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"chat"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Prompt cannot be null or empty\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Chat - Technical Question",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"Explain the difference between @Component and @Service annotations in Spring Boot\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"chat"
+							]
+						},
+						"description": "Example: Ask a technical question about Spring Boot"
+					},
+					"response": []
+				},
+				{
+					"name": "Chat - Code Generation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"prompt\": \"Write a simple REST controller in Spring Boot that returns a list of users\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"chat"
+							]
+						},
+						"description": "Example: Request code generation from GPT-4o"
+					},
+					"response": []
+				}
+			],
+			"description": "Chat endpoints using OpenAI GPT-4o model"
+		},
+		{
+			"name": "Image Generation API",
+			"item": [
+				{
+					"name": "Generate Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/image/gen?message=A futuristic cityscape with flying cars at sunset",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"image",
+								"gen"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "A futuristic cityscape with flying cars at sunset",
+									"description": "Image prompt describing what to generate"
+								}
+							]
+						},
+						"description": "Generate an image using DALL-E 3 model with standard quality, 1024x1024 resolution. Returns the URL of the generated image."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/image/gen?message=A futuristic cityscape with flying cars at sunset",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"image",
+										"gen"
+									],
+									"query": [
+										{
+											"key": "message",
+											"value": "A futuristic cityscape with flying cars at sunset"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-xxx/user-xxx/img-xxx.png?st=xxx&se=xxx&sp=r&sv=xxx&sr=b&rscd=inline&rsct=image/png&skoid=xxx&sktid=xxx&skt=xxx&ske=xxx&sks=b&skv=xxx&sig=xxx"
+						}
+					]
+				},
+				{
+					"name": "Generate Image - Nature Scene",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/image/gen?message=A serene mountain lake surrounded by pine trees during autumn",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"image",
+								"gen"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "A serene mountain lake surrounded by pine trees during autumn"
+								}
+							]
+						},
+						"description": "Example: Generate a nature scene image"
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Image - Abstract Art",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/image/gen?message=Abstract geometric patterns in vibrant colors representing technology and innovation",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"image",
+								"gen"
+							],
+							"query": [
+								{
+									"key": "message",
+									"value": "Abstract geometric patterns in vibrant colors representing technology and innovation"
+								}
+							]
+						},
+						"description": "Example: Generate abstract art"
+					},
+					"response": []
+				}
+			],
+			"description": "Image generation endpoints using OpenAI DALL-E 3 model"
+		},
+		{
+			"name": "Horoscope API",
+			"item": [
+				{
+					"name": "Get Horoscope",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"zodiacSign\": \"Aries\",\n    \"days\": 7\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/horoscope",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"horoscope"
+							]
+						},
+						"description": "Get horoscope prediction for a zodiac sign for specified number of days using GPT-4o model. Returns a text prediction."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"zodiacSign\": \"Aries\",\n    \"days\": 7\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/horoscope",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"horoscope"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": "As an Aries for the next 7 days, you will experience dynamic energy and new opportunities..."
+						}
+					]
+				},
+				{
+					"name": "Get Horoscope - Leo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"zodiacSign\": \"Leo\",\n    \"days\": 14\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/horoscope",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"horoscope"
+							]
+						},
+						"description": "Example: Get 14-day horoscope for Leo"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Horoscope - Pisces",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"zodiacSign\": \"Pisces\",\n    \"days\": 30\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/horoscope",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"horoscope"
+							]
+						},
+						"description": "Example: Get 30-day horoscope for Pisces"
+					},
+					"response": []
+				}
+			],
+			"description": "Horoscope prediction endpoints using OpenAI GPT-4o model"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
