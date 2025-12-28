@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "spring-ai-collection-001",
 		"name": "Spring AI API Collection",
-		"description": "API collection for Spring AI application with OpenAI integration (Chat, Image Generation, and Horoscope endpoints)",
+		"description": "API collection for Spring AI application with OpenAI integration (Chat, Image Generation, Horoscope, and RAG endpoints)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "spring-ai-v1.1.0"
 	},
@@ -474,6 +474,526 @@
 				}
 			],
 			"description": "Horoscope prediction endpoints using OpenAI GPT-4o model"
+		},
+		{
+			"name": "RAG (Retrieval-Augmented Generation) API",
+			"item": [
+				{
+					"name": "Check RAG Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/rag/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"rag",
+								"status"
+							]
+						},
+						"description": "Check the current status of the RAG document store. Returns the total number of chunks and whether the system is ready for queries."
+					},
+					"response": [
+						{
+							"name": "Success Response - Empty Store",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/rag/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"total_chunks\": 0,\n    \"ready\": false\n}"
+						},
+						{
+							"name": "Success Response - With Documents",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/rag/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"total_chunks\": 45,\n    \"ready\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Ingest PDF Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"filePath\": \"/path/to/your/document.pdf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/rag/ingest",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"rag",
+								"ingest"
+							]
+						},
+						"description": "Ingest a PDF document into the RAG system. The document will be:\n1. Extracted (PDF to text using Apache PDFBox)\n2. Split into chunks (1000 characters with 200 character overlap)\n3. Embedded using OpenAI text-embedding-3-small model\n4. Stored in the in-memory vector database\n\nNote: Limited to 50 chunks for demo purposes. Update filePath to point to your PDF file."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"filePath\": \"/Users/mathew/github_projects/spring-ai/2025_state_of_ai_assisted_software_development.pdf\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/rag/ingest",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"ingest"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Document ingested successfully\",\n    \"chunks_created\": 45,\n    \"total_chunks\": 45\n}"
+						},
+						{
+							"name": "Error Response - File Not Found",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"filePath\": \"/nonexistent/file.pdf\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/rag/ingest",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"ingest"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Failed to ingest document: PDF file not found: /nonexistent/file.pdf\"\n}"
+						}
+					]
+				},
+				{
+					"name": "RAG Chat - Ask Questions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"What are the main topics covered in the document?\",\n    \"topK\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/rag/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"rag",
+								"chat"
+							]
+						},
+						"description": "Ask questions about ingested documents using RAG. The system will:\n1. Convert your question to an embedding vector\n2. Find the most similar document chunks using cosine similarity (topK)\n3. Include those chunks as context in the GPT-4 prompt\n4. Generate an answer grounded in the retrieved content\n\ntopK: Number of most relevant chunks to retrieve (default: 3, higher values provide more context)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"question\": \"What are the main topics covered in the document?\",\n    \"topK\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/rag/chat",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"chat"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Based on the document, the main topics covered include...\"\n}"
+						},
+						{
+							"name": "Error - No Documents Ingested",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"question\": \"What are the main topics?\",\n    \"topK\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/rag/chat",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"chat"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Error: No documents have been ingested. Please ingest documents first.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "RAG Chat - Detailed Query",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"What are the key findings about AI-assisted software development and productivity?\",\n    \"topK\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/rag/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"rag",
+								"chat"
+							]
+						},
+						"description": "Example: Ask a detailed question with higher topK for more context"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Document Chunks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/rag/search?query=productivity&topK=3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"rag",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "productivity",
+									"description": "Search query text"
+								},
+								{
+									"key": "topK",
+									"value": "3",
+									"description": "Number of results to return"
+								}
+							]
+						},
+						"description": "Search for document chunks most similar to a query. Returns the matching chunks with metadata (source, chunk_index, preview). Useful for debugging or showing users what context would be retrieved for a given question."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/rag/search?query=productivity&topK=3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"search"
+									],
+									"query": [
+										{
+											"key": "query",
+											"value": "productivity"
+										},
+										{
+											"key": "topK",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"source\": \"/path/to/document.pdf\",\n        \"chunk_index\": 12,\n        \"total_chunks\": 45,\n        \"text\": \"Full text of the matching chunk...\",\n        \"preview\": \"Full text of the matching chunk (first 200 chars)...\"\n    },\n    {\n        \"source\": \"/path/to/document.pdf\",\n        \"chunk_index\": 28,\n        \"total_chunks\": 45,\n        \"text\": \"Another matching chunk...\",\n        \"preview\": \"Another matching chunk (first 200 chars)...\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Search - Machine Learning",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/rag/search?query=machine learning algorithms&topK=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"rag",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "machine learning algorithms"
+								},
+								{
+									"key": "topK",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Example: Search for content about machine learning with more results"
+					},
+					"response": []
+				},
+				{
+					"name": "Clear All Documents",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/rag/clear",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"rag",
+								"clear"
+							]
+						},
+						"description": "Clear all documents from the RAG vector store. Use this to reset the system before ingesting new documents or when you want to start fresh."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/rag/clear",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"rag",
+										"clear"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Document store cleared\",\n    \"chunks_removed\": 45\n}"
+						}
+					]
+				}
+			],
+			"description": "RAG (Retrieval-Augmented Generation) endpoints for document ingestion, semantic search, and context-grounded question answering using OpenAI embeddings and GPT-4o"
 		}
 	],
 	"event": [

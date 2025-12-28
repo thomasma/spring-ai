@@ -112,10 +112,11 @@ This application includes a complete RAG implementation that allows you to query
    ```
 
 2. **Ingest a PDF document:**
+   Change to full path to your PDF
    ```bash
    curl -X POST http://localhost:8080/api/rag/ingest \
      -H "Content-Type: application/json" \
-     -d '{"filePath": "/path/to/your/document.pdf"}'
+     -d '{"filePath": "/Users/mathew/github_projects/spring-ai/2025_state_of_ai_assisted_software_development.pdf"}'
    ```
 
 3. **Ask questions about the document:**
@@ -256,14 +257,3 @@ Increase heap size when running:
 ```bash
 MAVEN_OPTS="-Xmx4g" mvn spring-boot:run
 ```
-
-### Port Already in Use
-
-Change the port in application.properties and/or kill any orphan processes:
-```properties
-server.port=8081
-```
-
-### OpenAI API Rate Limits
-
-The embedding API has rate limits. For large documents, the service automatically limits to 50 chunks. Adjust this in RagService.java if needed.
